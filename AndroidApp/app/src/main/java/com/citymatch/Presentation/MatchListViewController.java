@@ -2,16 +2,19 @@ package com.citymatch.Presentation;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.nakima.requestslibrary.OnFailure;
 import android.nakima.requestslibrary.OnSuccess;
 import android.nakima.requestslibrary.Response;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.citymatch.ApiService.CityMatchService;
 import com.citymatch.Domain.Models.MatchItem;
@@ -24,70 +27,86 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 public class MatchListViewController extends AppCompatActivity {
 
     private ListView listView;
+    private Context context;
+    private LayoutInflater inflater;
+    private MatchList matchList;
+    private int userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.match_list_view);
 
+        //TODO getUserID
+
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
+        inflater = getLayoutInflater();
+        context = getApplicationContext();
 
         listView = (ListView) findViewById(R.id.list);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(matchList != null) {
+                    MatchItem item = matchList.get(position);
+                    Intent intent = new Intent(context, MatchViewController.class);
+                    intent.putExtra(IntentAttribute.USER_ID.toString(), userID);
+                    intent.putExtra(IntentAttribute.CITY_ID.toString(), item.cityID);
+                    startActivity(intent);
+                }
+            }
+        });
 
-        CityMatchService.getInstance().getMatchList(new MyOnSuccess(), new MyOnFailure());
+        CityMatchService.getInstance().getMatchList(userID, new CityListSuccess(), new CityListFailure());
     }
 
-    //TODO implement onResume & onPause
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
+    }
 
-    private class MyOnSuccess implements OnSuccess {
+    @Override
+    protected void onPause() {
+        ImageLoader.getInstance().destroy();
+        super.onPause();
+    }
+
+    private class CityListSuccess implements OnSuccess {
 
         @Override
         public void onSuccess(Response response) {
-            //String json = response.getMessage().toString();
-            String json = "[\n" +
-                    "  {\n" +
-                    "    \"country\": \"switzerland\",\n" +
-                    "    \"name\": \"ginebra\",\n" +
-                    "    \"imageURL\": \"http://3dn6i8277y3e2terx93zyfk5.wpengine.netdna-cdn.com/wp-content/uploads/2016/08/epfl_lake.jpg\"\n" +
-                    "  },\n" +
-                    "  {\n" +
-                    "    \"country\": \"spain\",\n" +
-                    "    \"name\": \"bcn\",\n" +
-                    "    \"imageURL\": \"http://3dn6i8277y3e2terx93zyfk5.wpengine.netdna-cdn.com/wp-content/uploads/2016/08/epfl_lake.jpg\"\n" +
-                    "  }\n" +
-                    "]";
+            String json = response.getMessage().toString();
             Gson gson = new Gson();
-            MatchList matchList = gson.fromJson(json, MatchList.class);
-            for(MatchItem item : matchList) {
-                Log.d("MatchList", item.imageURL);
-            }
+            matchList = gson.fromJson(json, MatchList.class);
             MyArrayAdapter adapter = new MyArrayAdapter(getApplicationContext(), matchList);
             listView.setAdapter(adapter);
         }
     }
 
-    private class MyOnFailure implements OnFailure {
+    private class CityListFailure implements OnFailure {
 
         @Override
         public void onFailure(Response response) {
-
+            Toast.makeText(getApplicationContext(), "Database connection error = " + response.getStatusCode(), Toast.LENGTH_SHORT).show();
         }
     }
 
     private class MyArrayAdapter extends ArrayAdapter<MatchItem> {
-        private final Context context;
         private final MatchList matchList;
 
         public MyArrayAdapter(Context context, MatchList matchList) {
             super(context, 0, matchList);
-            this.context = context;
             this.matchList = matchList;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Log.e("MatchList", ""+position);
-            return matchList.get(position).populateListItem(context, parent);
+            return matchList.get(position).populateListItem(inflater, parent);
         }
+    }
+
+    protected enum IntentAttribute {
+        USER_ID, CITY_ID;
     }
 }
