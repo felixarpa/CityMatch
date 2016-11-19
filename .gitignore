@@ -4,26 +4,26 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/dictionaries
-.idea/vcs.xml
-.idea/jsLibraryMappings.xml
+citymatch/.idea/workspace.xml
+citymatch/.idea/tasks.xml
+citymatch/.idea/dictionaries
+citymatch/.idea/vcs.xml
+citymatch/.idea/jsLibraryMappings.xml
 
 # Sensitive or high-churn files:
-.idea/dataSources.ids
-.idea/dataSources.xml
-.idea/dataSources.local.xml
-.idea/sqlDataSources.xml
-.idea/dynamic.xml
-.idea/uiDesigner.xml
+citymatch/.idea/dataSources.ids
+citymatch/.idea/dataSources.xml
+citymatch/.idea/dataSources.local.xml
+citymatch/.idea/sqlDataSources.xml
+citymatch/.idea/dynamic.xml
+citymatch/.idea/uiDesigner.xml
 
 # Gradle:
-.idea/gradle.xml
-.idea/libraries
+citymatch/.idea/gradle.xml
+citymatch/.idea/libraries
 
 # Mongo Explorer plugin:
-.idea/mongoSettings.xml
+citymatch/.idea/mongoSettings.xml
 
 ## File-based project format:
 *.iws
@@ -34,7 +34,7 @@
 /out/
 
 # mpeltonen/sbt-idea plugin
-.idea_modules/
+citymatch/.idea_modules/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
