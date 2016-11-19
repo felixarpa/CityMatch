@@ -33,4 +33,18 @@ router.get('/airports/:q', function (req, res, next) {
     });
 });
 
+router.post('/flights/:origin/:dest', function (req, res, next) {
+    request({
+        url: 'http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/ES/EUR/en-GB/' + req.params.origin + '/'
+        + req.params.dest + '/' + req.body.dateIda + '/' + req.body.dateVuelta + '?apiKey=' + config.skyscanner,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }, function (err, skyscanner_res, body) {
+        if (!err && skyscanner_res.statusCode == 200) {
+            res.json(JSON.parse(body));
+        }
+    })
+});
+
 module.exports = router;
