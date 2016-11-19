@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/md_white_1000"
-    tools:context="com.citymatch.Presentation.MatcherVeiwController">
+    tools:activity="com.citymatch.Presentation.MatcherViewController">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -17,19 +17,26 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <com.lorentzos.flingswipe.SwipeFlingAdapterView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/swipe_view"
+    <!--<com.lorentzos.flingswipe.SwipeFlingAdapterView-->
+        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+        <!--android:id="@+id/swipe_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="360dp"-->
+        <!--app:rotation_degrees="16"-->
+        <!--app:max_visible="4"-->
+        <!--app:min_adapter_stack="6"-->
+        <!--android:layout_below="@+id/toolbar"-->
+        <!--android:layout_margin="32dp" >-->
+
+    <!--</com.lorentzos.flingswipe.SwipeFlingAdapterView>-->
+
+    <com.daprlabs.cardstack.SwipeDeck
         android:layout_width="match_parent"
         android:layout_height="360dp"
-        app:rotation_degrees="16"
-        app:max_visible="4"
-        app:min_adapter_stack="6"
+        android:id="@+id/swipe_view"
         android:layout_below="@+id/toolbar"
-        android:layout_margin="32dp" >
-
-    </com.lorentzos.flingswipe.SwipeFlingAdapterView>
+        android:layout_margin="32dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
