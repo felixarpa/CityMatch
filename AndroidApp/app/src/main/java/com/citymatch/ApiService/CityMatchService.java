@@ -7,7 +7,7 @@ import android.nakima.requestslibrary.Request;
 
 public class CityMatchService {
 
-    private static final String URL = "";
+    private static final String URL = "https://appcitymatch.herokuapp.com/";
 
     private static CityMatchService ourInstance = new CityMatchService();
 
@@ -42,6 +42,15 @@ public class CityMatchService {
 
         Request request = new Request(Request.GET, URL);
         request.addParam("username", username);
+
+        request.setOnSuccess(onSuccess);
+        request.setOnFailure(onFailure);
+
+        request.send();
+    }
+
+    public void getImages(OnSuccess onSuccess, OnFailure onFailure) {
+        Request request = new Request(Request.GET, URL + "images/");
 
         request.setOnSuccess(onSuccess);
         request.setOnFailure(onFailure);
