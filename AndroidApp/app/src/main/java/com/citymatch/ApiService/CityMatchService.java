@@ -25,7 +25,7 @@ public class CityMatchService {
         Request.initialize(context);
     }
 
-    public static void login(String username, String password, OnSuccess onSuccess, OnFailure onFailure) {
+    public void login(String username, String password, OnSuccess onSuccess, OnFailure onFailure) {
         Request request = new Request(Request.POST, URL);
 
         request.addParam("username", username);
@@ -37,5 +37,15 @@ public class CityMatchService {
         request.send();
     }
 
+    public void getMatchList(OnSuccess onSuccess, OnFailure onFailure) {
+        String username = "pepe";
 
+        Request request = new Request(Request.GET, URL);
+        request.addParam("username", username);
+
+        request.setOnSuccess(onSuccess);
+        request.setOnFailure(onFailure);
+
+        request.send();
+    }
 }
