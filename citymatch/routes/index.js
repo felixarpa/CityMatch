@@ -47,4 +47,18 @@ router.post('/flights/:origin/:dest', function (req, res, next) {
     })
 });
 
+
+router.get('/list/', function(req, res, next){
+    // getting list of data
+});
+
+
+router.post('/like/', function(req, res, next){
+   var postId = req.body.postId;
+   var userId = req.body.userId;
+   // return match or not
+});
+
+
+
 module.exports = router;
