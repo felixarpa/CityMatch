@@ -37,17 +37,16 @@ public class CityMatchService {
         request.send();
     }
 
-    public void getMatchList(OnSuccess onSuccess, OnFailure onFailure) {
+    public void getMatchList(int userID, OnSuccess onSuccess, OnFailure onFailure) {
         String username = "pepe";
 
-        Request request = new Request(Request.GET, URL);
+        Request request = new Request(Request.GET, URL + "match/" + userID);
         request.addParam("username", username);
 
         request.setOnSuccess(onSuccess);
         request.setOnFailure(onFailure);
 
-        //request.send();
-        onSuccess.onSuccess(null);
+        request.send();
     }
 
     public void getImages(OnSuccess onSuccess, OnFailure onFailure) {

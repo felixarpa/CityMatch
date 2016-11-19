@@ -8,7 +8,6 @@ import android.nakima.requestslibrary.OnSuccess;
 import android.nakima.requestslibrary.Response;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,7 @@ public class MatchListViewController extends AppCompatActivity {
     private Context context;
     private LayoutInflater inflater;
     private MatchList matchList;
-    private Integer userID;
+    private int userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +57,7 @@ public class MatchListViewController extends AppCompatActivity {
             }
         });
 
-        CityMatchService.getInstance().getMatchList(new MyOnSuccess(), new MyOnFailure());
+        CityMatchService.getInstance().getMatchList(userID, new MyOnSuccess(), new MyOnFailure());
     }
 
     @Override
