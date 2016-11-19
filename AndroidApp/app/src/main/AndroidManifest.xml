@@ -8,13 +8,15 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashController">
+        <activity android:name=".Presentation.SplashController">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Presentation.LoginViewController" />
+        <activity android:name=".Presentation.MatcherVeiwController" />
     </application>
 
 </manifest>
