@@ -19,7 +19,6 @@ public class MatchItem {
     public String imageURL;
     public Integer cityID;
     public String description;
-    public ArrayList<String> photos;
 
     public MatchItem() {}
 
@@ -31,7 +30,6 @@ public class MatchItem {
         name.setText(this.name);
         country.setText(this.country);
         ImageLoader.getInstance().displayImage(imageURL, icon);
-
         return rowView;
     }
 }

@@ -50,14 +50,14 @@ public class MatchListViewController extends AppCompatActivity {
                 if(matchList != null) {
                     MatchItem item = matchList.get(position);
                     Intent intent = new Intent(context, MatchViewController.class);
-                    intent.putExtra("userID", userID);
-                    intent.putExtra("cityID", item.cityID);
+                    intent.putExtra(IntentAttribute.USER_ID.toString(), userID);
+                    intent.putExtra(IntentAttribute.CITY_ID.toString(), item.cityID);
                     startActivity(intent);
                 }
             }
         });
 
-        CityMatchService.getInstance().getMatchList(userID, new MyOnSuccess(), new MyOnFailure());
+        CityMatchService.getInstance().getMatchList(userID, new CityListSuccess(), new CityListFailure());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MatchListViewController extends AppCompatActivity {
         super.onPause();
     }
 
-    private class MyOnSuccess implements OnSuccess {
+    private class CityListSuccess implements OnSuccess {
 
         @Override
         public void onSuccess(Response response) {
@@ -84,7 +84,7 @@ public class MatchListViewController extends AppCompatActivity {
         }
     }
 
-    private class MyOnFailure implements OnFailure {
+    private class CityListFailure implements OnFailure {
 
         @Override
         public void onFailure(Response response) {
@@ -104,5 +104,9 @@ public class MatchListViewController extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             return matchList.get(position).populateListItem(inflater, parent);
         }
+    }
+
+    protected enum IntentAttribute {
+        USER_ID, CITY_ID;
     }
 }
