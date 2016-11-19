@@ -16,11 +16,11 @@ public class SplashController extends AppCompatActivity {
         setContentView(R.layout.splash_veiw);
 
         SharedPreferences sp = getSharedPreferences("sp-citymatch", Context.MODE_PRIVATE);
-        if (sp.getBoolean("logged", false)) {
-            startActivity(new Intent(getApplicationContext(), LoginViewController.class));
+        if (sp.getBoolean("logged0", false)) {
+            startActivity(new Intent(getApplicationContext(), MatcherViewController.class));
             finish();
         } else {
-            startActivity(new Intent(getApplicationContext(), MatcherViewController.class));
+            startActivity(new Intent(getApplicationContext(), LoginViewController.class));
             finish();
         }
     }

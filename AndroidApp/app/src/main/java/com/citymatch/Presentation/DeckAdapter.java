@@ -21,8 +21,8 @@ public class DeckAdapter extends BaseAdapter {
     private ArrayList<String> urls;
     private MatcherViewController activity;
 
-    public DeckAdapter(ArrayList<String> urls, MatcherViewController activity) {
-        this.urls = urls;
+    public DeckAdapter(MatcherViewController activity) {
+        this.urls = new ArrayList<>();
         this.activity = activity;
     }
 

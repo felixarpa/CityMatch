@@ -17,18 +17,20 @@
 
         <ImageView
             android:id="@+id/settings"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:padding="12dp"
             android:layout_alignParentStart="true"
-            />
+            android:src="@drawable/account_settings_variant"/>
 
 
         <ImageView
             android:id="@+id/matches"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            />
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:padding="12dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/format_list_bulleted"/>
 
     </RelativeLayout>
 
@@ -57,14 +59,14 @@
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 app:cardCornerRadius="48dp"
-                android:backgroundTint="@color/colorAccent"
+                android:backgroundTint="@color/md_red_500"
                 android:layout_centerInParent="true">
 
                 <ImageView
                     android:src="@drawable/close"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/colorAccent"
+                    android:background="@color/md_red_500"
                     android:tint="@color/md_white_1000"
                     android:layout_margin="16dp"/>
 

@@ -25,11 +25,10 @@ public class CityMatchService {
         Request.initialize(context);
     }
 
-    public void login(String username, String password, OnSuccess onSuccess, OnFailure onFailure) {
-        Request request = new Request(Request.POST, URL);
+    public void login(String email, OnSuccess onSuccess, OnFailure onFailure) {
+        Request request = new Request(Request.POST, URL + "users/login/");
 
-        request.addParam("username", username);
-        request.addParam("password", password);
+        request.addParam("email", "pau@outlook.com");
 
         request.setOnSuccess(onSuccess);
         request.setOnFailure(onFailure);
