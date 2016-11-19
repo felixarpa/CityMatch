@@ -13,5 +13,6 @@ public class MatchViewController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.match_list_view);
 
+
     }
 }
