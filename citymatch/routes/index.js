@@ -1,4 +1,5 @@
 var express = require('express');
+var request = require('request');
 var config = require('../config');
 var router = express.Router();
 
@@ -18,7 +19,7 @@ router.get('/images/:q', function (req, res, next) {
     res.send('OK');
 });
 
-router.get('/airports/:q', utils.ensureAuthenticatedJSON, function (req, res, next) {
+router.get('/airports/:q', function (req, res, next) {
     request({
         url: 'http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/ES/EUR/en-GB?query=' + req.params.q +
         '&apiKey=' + config.skyscanner,
