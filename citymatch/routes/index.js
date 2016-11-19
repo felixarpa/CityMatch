@@ -59,6 +59,10 @@ router.post('/like/', function(req, res, next){
    // return match or not
 });
 
+var userRouter = require('./routes/user');
+
+router.use('/words' ,wordRouter);
+
 
 
 module.exports = router;
