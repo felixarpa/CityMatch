@@ -4,8 +4,8 @@
     android:id="@+id/login_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    tools:context="com.example.felixarpa.citymatch.Presentation.LoginViewController">
+    android:background="@color/md_white_1000"
+    tools:context="com.citymatch.Presentation.LoginViewController">
 
     <ImageView
         android:id="@+id/logo_image"

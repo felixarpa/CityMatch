@@ -1,4 +1,4 @@
-package com.example.felixarpa.citymatch;
+package com.citymatch;
 
 import org.junit.Test;
 

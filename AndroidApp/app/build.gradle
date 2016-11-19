@@ -2,9 +2,9 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "25"
     defaultConfig {
-        applicationId "com.example.felixarpa.citymatch"
+        applicationId "com.citymatch"
         minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
