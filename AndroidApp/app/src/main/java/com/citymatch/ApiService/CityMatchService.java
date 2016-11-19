@@ -46,7 +46,8 @@ public class CityMatchService {
         request.setOnSuccess(onSuccess);
         request.setOnFailure(onFailure);
 
-        request.send();
+        //request.send();
+        onSuccess.onSuccess(null);
     }
 
     public void getImages(OnSuccess onSuccess, OnFailure onFailure) {
