@@ -17,10 +17,10 @@ public class SplashController extends AppCompatActivity {
 
         SharedPreferences sp = getSharedPreferences("sp-citymatch", Context.MODE_PRIVATE);
         if (sp.getBoolean("logged", false)) {
-            startActivity(new Intent(getApplicationContext(), MatcherViewController.class));
+            startActivity(new Intent(getApplicationContext(), LoginViewController.class));
             finish();
         } else {
-            startActivity(new Intent(getApplicationContext(), LoginViewController.class));
+            startActivity(new Intent(getApplicationContext(), MatcherViewController.class));
             finish();
         }
     }
