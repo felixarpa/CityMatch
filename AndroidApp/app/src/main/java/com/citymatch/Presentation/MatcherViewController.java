@@ -2,9 +2,6 @@ package com.citymatch.Presentation;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.nakima.requestslibrary.OnFailure;
-import android.nakima.requestslibrary.OnSuccess;
-import android.nakima.requestslibrary.Response;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -12,17 +9,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.citymatch.ApiService.CityMatchService;
+import com.citymatch.ApiService.MyApiEntrypoint;
+import com.citymatch.ApiService.Service;
+import com.citymatch.Domain.Models.Image;
 import com.citymatch.R;
 import com.daprlabs.cardstack.SwipeDeck;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MatcherViewController extends AppCompatActivity implements View.OnClickListener, SwipeDeck.SwipeEventCallback {
 
@@ -53,27 +52,22 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
 
         adapter = new DeckAdapter(this);
 
-        CityMatchService.getInstance(this).getImages(
-                new OnSuccess() {
+        MyApiEntrypoint apiService = Service.getApiService();
+
+        Service.getApiService().getImages().enqueue(
+                new Callback<ArrayList<Image>>() {
                     @Override
-                    public void onSuccess(Response response) {
-                        try {
-                            JSONArray array = new JSONArray(response.getMessage());
-                            for (int i = 0; i < array.length(); i++) {
-                                JSONObject object = array.getJSONObject(i);
-                                adapter.push(object.getString("url"));
-                                ids.add(object.getString("_id"));
-                            }
-                            setDeck();
-                        } catch (JSONException e) {
-                            Toast.makeText(getApplicationContext(), "Can't load images", Toast.LENGTH_SHORT).show();
+                    public void onResponse(Call<ArrayList<Image>> call, Response<ArrayList<Image>> response) {
+                        ArrayList<Image> imgs = response.body();
+                        for (Image i : imgs) {
+                            adapter.push(i.getUrl());
                         }
+                        setDeck();
                     }
-                },
-                new OnFailure() {
+
                     @Override
-                    public void onFailure(Response response) {
-                        Toast.makeText(getApplicationContext(), "Can't load images", Toast.LENGTH_SHORT).show();
+                    public void onFailure(Call<ArrayList<Image>> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), "Can't get places", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -105,29 +99,6 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
 
     private void loadMorePlaces() {
         ++page;
-        CityMatchService.getInstance(this).getImages(
-                new OnSuccess() {
-                    @Override
-                    public void onSuccess(Response response) {
-                        try {
-                            JSONArray array = new JSONArray(response.getMessage());
-                            for (int i = 0; i < array.length(); i++) {
-                                JSONObject object = array.getJSONObject(i);
-                                adapter.push(object.getString("url"));
-                                ids.add(object.getString("_id"));
-                            }
-                        } catch (JSONException e) {
-                            Toast.makeText(getApplicationContext(), "Can't load images", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                },
-                new OnFailure() {
-                    @Override
-                    public void onFailure(Response response) {
-                        Toast.makeText(getApplicationContext(), "Can't load images", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
     }
 
     @Override

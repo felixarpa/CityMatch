@@ -3,23 +3,23 @@ package com.citymatch.Presentation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.nakima.requestslibrary.OnFailure;
-import android.nakima.requestslibrary.OnSuccess;
-import android.nakima.requestslibrary.Response;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.citymatch.ApiService.CityMatchService;
+import com.citymatch.ApiService.Service;
+import com.citymatch.Domain.Models.User;
 import com.citymatch.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginViewController extends AppCompatActivity implements View.OnClickListener {
 
@@ -45,36 +45,26 @@ public class LoginViewController extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View view) {
-        CityMatchService.getInstance(this).login(
-                email.getText().toString(),
-                new OnSuccess() {
+        Map<String, String> map = new HashMap<>();
+        map.put("email", "pau@outlook.com");
+        Service.getApiService().login(map).enqueue(
+                new Callback<User>() {
                     @Override
-                    public void onSuccess(Response response) {
+                    public void onResponse(Call<User> call, Response<User> response) {
                         SharedPreferences.Editor editor = getSharedPreferences("sp-citymatch", Context.MODE_PRIVATE).edit();
+                        editor.putString("user_id", response.body().getId());
                         editor.putBoolean("logged", true);
-                        String userId = "asdf";
-                        Log.v("USERID", response.getMessage());
-                        try {
-                            JSONObject object1 = new JSONObject(response.getMessage());
-                            JSONArray array = object1.getJSONArray("user");
-                            JSONObject object2 = array.getJSONObject(0);
-                            userId = object2.getString("_id");
-                        } catch (JSONException ignored) {
-                        }
-                        Log.v("USERID", userId);
-                        editor.putString("user_id", userId);
                         editor.apply();
                         startActivity(new Intent(getApplicationContext(), MatcherViewController.class));
                         finish();
                     }
-                },
-                new OnFailure() {
+
                     @Override
-                    public void onFailure(Response response) {
-                        passwordTIL.setError("Incorrect password");
-                        password.setText("");
+                    public void onFailure(Call<User> call, Throwable t) {
+
                     }
                 }
         );
+
     }
 }

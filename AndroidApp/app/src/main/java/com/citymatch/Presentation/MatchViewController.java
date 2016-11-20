@@ -3,9 +3,6 @@ package com.citymatch.Presentation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.nakima.requestslibrary.OnFailure;
-import android.nakima.requestslibrary.OnSuccess;
-import android.nakima.requestslibrary.Response;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -14,17 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.citymatch.ApiService.CityMatchService;
 import com.citymatch.Domain.Models.MatchItem;
-import com.citymatch.Domain.Models.MatchList;
 import com.citymatch.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -62,13 +54,12 @@ public class MatchViewController extends AppCompatActivity {
         userID = intent.getIntExtra(MatchListViewController.IntentAttribute.USER_ID.toString(), 0);
         cityID = intent.getIntExtra(MatchListViewController.IntentAttribute.CITY_ID.toString(), 0);
 
-        CityMatchService.getInstance().getCityDescription(cityID, new CityDescriptionSuccess(), new CityDescriptionFailure());
-        CityMatchService.getInstance().getMatchImages(userID, cityID, new MatchImagesSuccess(), new MatchImagesFailure());
+//        Service.getInstance().getCityDescription(cityID, new CityDescriptionSuccess(), new CityDescriptionFailure());
+//        Service.getInstance().getMatchImages(userID, cityID, new MatchImagesSuccess(), new MatchImagesFailure());
 
 
     }
-
-    private class CityDescriptionSuccess implements OnSuccess {
+/*    private class CityDescriptionSuccess implements OnSuccess {
 
         @Override
         public void onSuccess(Response response) {
@@ -110,7 +101,7 @@ public class MatchViewController extends AppCompatActivity {
         public void onFailure(Response response) {
             Toast.makeText(getApplicationContext(), "Database connection error = " + response.getStatusCode(), Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
     private class MyArrayAdapter extends ArrayAdapter<String> {
         private final ArrayList<String> photosURL;
