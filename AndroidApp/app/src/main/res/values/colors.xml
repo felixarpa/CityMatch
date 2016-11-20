@@ -76,7 +76,7 @@
     <color name="transparent_white_percent_80">#CCFFFFFF</color>
     <color name="transparent_white_percent_85">#D9FFFFFF</color>
     <color name="transparent_white_percent_90">#E6FFFFFF</color>
-    <color name="transparent_white_percent_95">#F2FFFFFF</color>
+    <color name="transparent_white_percent_95">#ffffff</color>
 
     <!-- reds -->
     <color name="md_red_50">#FFEBEE</color>
@@ -371,4 +371,5 @@
     <color name="md_blue_grey_700">#455A64</color>
     <color name="md_blue_grey_800">#37474F</color>
     <color name="md_blue_grey_900">#263238</color>
+    <color name="transparent_white_percent_100">#00ffffff</color>
 </resources>

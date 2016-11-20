@@ -2,10 +2,12 @@ package com.citymatch.Presentation;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,8 +15,10 @@ import android.widget.Toast;
 
 import com.citymatch.ApiService.Service;
 import com.citymatch.Domain.Models.Image;
+import com.citymatch.Domain.Models.Location;
 import com.citymatch.Domain.Models.MatchItem;
 import com.citymatch.R;
+import com.google.android.gms.common.images.WebImage;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -58,16 +62,42 @@ public class MatchViewController extends AppCompatActivity implements OnMapReady
 
         Service.getApiService().getCityDescription(cityID).enqueue(new CityDescriptionCallback());
         Service.getApiService().getMatchImages(userID, cityID).enqueue(new MatchImagesCallback());
+
+        ImageButton button = (ImageButton) findViewById(R.id.skyscanner_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "https://www.skyscanner.net/transport/flights/gva/" + item.getSsid().split("-")[0];
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-
-        LatLng pos = new LatLng(-34, 151);
-        map.addMarker(new MarkerOptions().position(pos).title("Marker"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(pos));
         map.getUiSettings().setScrollGesturesEnabled(false);
+
+        if(item != null) {
+            setMapLocation();
+        }
+    }
+
+    private void setMapLocation() {
+        Service.getApiService().getLocation(item.getName()).enqueue(new Callback<Location>() {
+            @Override
+            public void onResponse(Call<Location> call, Response<Location> response) {
+                Location pos = response.body();
+                LatLng coord = new LatLng(pos.getLat(), pos.getLng());
+                map.addMarker(new MarkerOptions().position(coord).title("Marker"));
+                map.moveCamera(CameraUpdateFactory.newLatLng(coord));
+            }
+
+            @Override
+            public void onFailure(Call<Location> call, Throwable t) {}
+        });
     }
 
     private class CityDescriptionCallback implements Callback<MatchItem> {
@@ -82,6 +112,9 @@ public class MatchViewController extends AppCompatActivity implements OnMapReady
             TextView description = (TextView) findViewById(R.id.description);
             description.setText(item.getDescription());
             ImageLoader.getInstance().displayImage(item.getCoverImage(), (ImageView) findViewById(R.id.icon));
+            if(item != null) {
+                setMapLocation();
+            }
         }
 
         @Override
