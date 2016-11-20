@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.citymatch.ApiService.MyApiEntrypoint;
+import com.citymatch.ApiService.MyApiEntryPoint;
 import com.citymatch.ApiService.Service;
 import com.citymatch.Domain.Models.Image;
 import com.citymatch.R;
@@ -52,7 +52,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
 
         adapter = new DeckAdapter(this);
 
-        MyApiEntrypoint apiService = Service.getApiService();
+        MyApiEntryPoint apiService = Service.getApiService();
 
         Service.getApiService().getImages().enqueue(
                 new Callback<ArrayList<Image>>() {

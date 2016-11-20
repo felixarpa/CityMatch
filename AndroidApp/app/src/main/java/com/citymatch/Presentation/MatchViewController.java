@@ -11,7 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.citymatch.ApiService.Service;
 import com.citymatch.Domain.Models.MatchItem;
 import com.citymatch.R;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,11 +25,15 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MatchViewController extends AppCompatActivity {
 
     private MatchItem item;
-    private int userID;
-    private int cityID;
+    private String userID;
+    private String cityID;
     private ListView photos;
     private LayoutInflater inflater;
     private MapView mapView;
@@ -51,57 +58,46 @@ public class MatchViewController extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        userID = intent.getIntExtra(MatchListViewController.IntentAttribute.USER_ID.toString(), 0);
-        cityID = intent.getIntExtra(MatchListViewController.IntentAttribute.CITY_ID.toString(), 0);
+        userID = intent.getStringExtra(MatchListViewController.IntentAttribute.USER_ID.toString());
+        cityID = intent.getStringExtra(MatchListViewController.IntentAttribute.CITY_ID.toString());
 
-//        Service.getInstance().getCityDescription(cityID, new CityDescriptionSuccess(), new CityDescriptionFailure());
-//        Service.getInstance().getMatchImages(userID, cityID, new MatchImagesSuccess(), new MatchImagesFailure());
-
-
+        Service.getApiService().getCityDescription(cityID).enqueue(new CityDescriptionCallback());
+        Service.getApiService().getMatchImages(userID, cityID).enqueue(new MatchImagesCallback());
     }
-/*    private class CityDescriptionSuccess implements OnSuccess {
+
+    private class CityDescriptionCallback implements Callback<MatchItem> {
 
         @Override
-        public void onSuccess(Response response) {
-            String json = response.getMessage().toString();
-            Gson gson = new Gson();
-            item = gson.fromJson(json, MatchItem.class);
+        public void onResponse(Call<MatchItem> call, Response<MatchItem> response) {
+            item = response.body();
             TextView name = (TextView) findViewById(R.id.name);
-            name.setText(item.name);
+            name.setText(item.getName());
             TextView country = (TextView) findViewById(R.id.country);
-            country.setText(item.country);
+            country.setText(item.getCountry());
             TextView description = (TextView) findViewById(R.id.description);
-            description.setText(item.description);
+            description.setText(item.getDescription());
+        }
 
+        @Override
+        public void onFailure(Call<MatchItem> call, Throwable t) {
+            Toast.makeText(getApplicationContext(), "Database connection error = " + t.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class CityDescriptionFailure implements OnFailure {
+    private class MatchImagesCallback implements Callback<ArrayList<String>> {
 
         @Override
-        public void onFailure(Response response) {
-            Toast.makeText(getApplicationContext(), "Database connection error = " + response.getStatusCode(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private class MatchImagesSuccess implements OnSuccess {
-
-        @Override
-        public void onSuccess(Response response) {
-            String json = response.getMessage().toString();
-            Gson gson = new Gson();
-            ArrayList<String> photosURL = gson.fromJson(json, ArrayList.class);
+        public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+            ArrayList<String> photosURL = response.body();
             MyArrayAdapter adapter = new MyArrayAdapter(getApplicationContext(), photosURL);
             photos.setAdapter(adapter);
         }
-    }
 
-    private class MatchImagesFailure implements OnFailure {
         @Override
-        public void onFailure(Response response) {
-            Toast.makeText(getApplicationContext(), "Database connection error = " + response.getStatusCode(), Toast.LENGTH_SHORT).show();
+        public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+            Toast.makeText(getApplicationContext(), "Database connection error = " + t.getMessage(), Toast.LENGTH_SHORT).show();
         }
-    }*/
+    }
 
     private class MyArrayAdapter extends ArrayAdapter<String> {
         private final ArrayList<String> photosURL;
