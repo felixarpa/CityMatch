@@ -30,7 +30,11 @@
         <activity
             android:name=".Presentation.MatcherViewController"
             android:screenOrientation="portrait" />
-        <activity android:name=".Presentation.RegisterViewController"></activity>
+        <activity android:name=".Presentation.RegisterViewController"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".Presentation.MatchListViewController"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

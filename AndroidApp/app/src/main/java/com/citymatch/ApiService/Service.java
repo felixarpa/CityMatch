@@ -14,7 +14,8 @@ public class Service {
     public static final String BASE_URL = "https://appcitymatch.herokuapp.com/";
     public static final String SP_NAME = "sp-citymatch";
 
-    public static MyApiEntrypoint getApiService() {Gson gson = new GsonBuilder()
+    public static MyApiEntryPoint getApiService() {
+        Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
             .create();
 
@@ -23,7 +24,7 @@ public class Service {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        return retrofit.create(MyApiEntrypoint.class);
+        return retrofit.create(MyApiEntryPoint.class);
     }
 
     public static String getUserId(Context context) {

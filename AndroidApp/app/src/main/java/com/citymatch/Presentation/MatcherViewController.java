@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.citymatch.ApiService.MyApiEntryPoint;
 import com.citymatch.ApiService.Service;
 import com.citymatch.Domain.Models.Image;
 import com.citymatch.Domain.Models.Match;
@@ -201,6 +202,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.matches:
+                startActivity(new Intent(getApplicationContext(), MatchListViewController.class));
                 break;
         }
 

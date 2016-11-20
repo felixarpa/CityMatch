@@ -11,27 +11,34 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.citymatch.ApiService.Service;
 import com.citymatch.Domain.Models.MatchItem;
-import com.citymatch.Domain.Models.MatchList;
 import com.citymatch.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MatchListViewController extends AppCompatActivity {
 
     private ListView listView;
     private Context context;
     private LayoutInflater inflater;
-    private MatchList matchList;
-    private int userID;
+    private ArrayList<MatchItem> matchList;
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.match_list_view);
 
-        //TODO getUserID
+        userID = "5830cbe1100d1c0011345ab4";
 
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
         inflater = getLayoutInflater();
@@ -45,13 +52,13 @@ public class MatchListViewController extends AppCompatActivity {
                     MatchItem item = matchList.get(position);
                     Intent intent = new Intent(context, MatchViewController.class);
                     intent.putExtra(IntentAttribute.USER_ID.toString(), userID);
-                    intent.putExtra(IntentAttribute.CITY_ID.toString(), item.cityID);
+                    intent.putExtra(IntentAttribute.CITY_ID.toString(), item.getId());
                     startActivity(intent);
                 }
             }
         });
 
-//        Service.getInstance().getMatchList(userID, new CityListSuccess(), new CityListFailure());
+        Service.getApiService().getMatchList(userID).enqueue(new MatchListCallback());
     }
 
     @Override
@@ -65,33 +72,26 @@ public class MatchListViewController extends AppCompatActivity {
         ImageLoader.getInstance().destroy();
         super.onPause();
     }
-/*
 
-    private class CityListSuccess implements OnSuccess {
-
+    private class MatchListCallback implements Callback<ArrayList<MatchItem>> {
         @Override
-        public void onSuccess(Response response) {
-            String json = response.getMessage().toString();
-            Gson gson = new Gson();
-            matchList = gson.fromJson(json, MatchList.class);
+        public void onResponse(Call<ArrayList<MatchItem>> call, Response<ArrayList<MatchItem>> response) {
+            matchList = response.body();
             MyArrayAdapter adapter = new MyArrayAdapter(getApplicationContext(), matchList);
             listView.setAdapter(adapter);
         }
-    }
-
-    private class CityListFailure implements OnFailure {
 
         @Override
-        public void onFailure(Response response) {
-            Toast.makeText(getApplicationContext(), "Database connection error = " + response.getStatusCode(), Toast.LENGTH_SHORT).show();
+        public void onFailure(Call<ArrayList<MatchItem>> call, Throwable t) {
+            t.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Database connection error = " + t.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-*/
 
     private class MyArrayAdapter extends ArrayAdapter<MatchItem> {
-        private final MatchList matchList;
+        private final ArrayList<MatchItem> matchList;
 
-        public MyArrayAdapter(Context context, MatchList matchList) {
+        public MyArrayAdapter(Context context, ArrayList<MatchItem> matchList) {
             super(context, 0, matchList);
             this.matchList = matchList;
         }
