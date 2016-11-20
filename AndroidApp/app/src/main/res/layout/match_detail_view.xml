@@ -15,17 +15,44 @@
             android:layout_height="wrap_content"
             android:id="@+id/description"
             android:textSize="20sp"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:padding="10dp" />
 
-        <ListView
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/photos"
-            android:scrollbars="horizontal" />
+            android:layout_height="wrap_content">
 
-        <com.google.android.gms.maps.MapView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/photos" />
+        </HorizontalScrollView>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/mapView" />
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Prices from: 154€"/>
+
+            <ImageButton
+                android:text="Buy Tickets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/skyscanner_button"
+                android:src="@drawable/skycanner_logo"/>
+        </LinearLayout>
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/map"
+            tools:context=".Presentation.MatchViewController"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
     </LinearLayout>
 </ScrollView>

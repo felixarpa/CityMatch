@@ -22,7 +22,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDXC8_Mk-Qd0JHm7U7zcKMUMdv4S5I3UXY" />
+            android:value="AIzaSyA29iEUQ9ItZKK8wdaT2jiiPA0DYQtNNvc" />
 
         <activity
             android:name=".Presentation.LoginViewController"

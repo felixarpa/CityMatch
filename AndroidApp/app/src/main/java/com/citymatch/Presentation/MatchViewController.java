@@ -1,16 +1,13 @@
 package com.citymatch.Presentation;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,9 +15,12 @@ import com.citymatch.ApiService.Service;
 import com.citymatch.Domain.Models.Image;
 import com.citymatch.Domain.Models.MatchItem;
 import com.citymatch.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -30,14 +30,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MatchViewController extends AppCompatActivity {
+public class MatchViewController extends AppCompatActivity implements OnMapReadyCallback {
 
     private MatchItem item;
     private String userID;
     private String cityID;
-    private ListView photos;
+    private LinearLayout photos;
     private LayoutInflater inflater;
-    private MapView mapView;
     private GoogleMap map;
 
     @Override
@@ -48,24 +47,27 @@ public class MatchViewController extends AppCompatActivity {
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
         inflater = getLayoutInflater();
 
-        mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                map = googleMap;
-                //if(item != nu)
-            }
-        });
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         Intent intent = getIntent();
         userID = intent.getStringExtra(MatchListViewController.IntentAttribute.USER_ID.toString());
         cityID = intent.getStringExtra(MatchListViewController.IntentAttribute.CITY_ID.toString());
 
-        photos = (ListView) findViewById(R.id.photos);
+        photos = (LinearLayout) findViewById(R.id.photos);
 
         Service.getApiService().getCityDescription(cityID).enqueue(new CityDescriptionCallback());
         Service.getApiService().getMatchImages(userID, cityID).enqueue(new MatchImagesCallback());
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+
+        LatLng pos = new LatLng(-34, 151);
+        map.addMarker(new MarkerOptions().position(pos).title("Marker"));
+        map.moveCamera(CameraUpdateFactory.newLatLng(pos));
+        map.getUiSettings().setScrollGesturesEnabled(false);
     }
 
     private class CityDescriptionCallback implements Callback<MatchItem> {
@@ -93,8 +95,14 @@ public class MatchViewController extends AppCompatActivity {
         @Override
         public void onResponse(Call<ArrayList<Image>> call, Response<ArrayList<Image>> response) {
             ArrayList<Image> images = response.body();
-            MyArrayAdapter adapter = new MyArrayAdapter(getApplicationContext(), images);
-            photos.setAdapter(adapter);
+            if(images != null) {
+                for(Image image : images) {
+                    View v = getLayoutInflater().inflate(R.layout.photo_row, null);
+                    ImageView imageView = (ImageView) v.findViewById(R.id.photo);
+                    ImageLoader.getInstance().displayImage(image.getUrl(), imageView);
+                    photos.addView(v);
+                }
+            }
         }
 
         @Override
@@ -103,22 +111,4 @@ public class MatchViewController extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Database connection error = " + t.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
-    private class MyArrayAdapter extends ArrayAdapter<Image> {
-        private final ArrayList<Image> images;
-
-        public MyArrayAdapter(Context context, ArrayList<Image> images) {
-            super(context, 0, images);
-            this.images = images;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView photo = new ImageView(getApplicationContext());
-            //photo.setLayoutParams(new ViewGroup.LayoutParams(getApplicationContext(), new ));
-            ImageLoader.getInstance().displayImage(images.get(position).getUrl(), photo);
-            return photo;
-        }
-    }
-
 }
