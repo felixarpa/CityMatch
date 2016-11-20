@@ -1,6 +1,7 @@
 package com.citymatch.Presentation;
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,6 +28,9 @@ public class RegisterViewController extends AppCompatActivity implements View.On
     private TextView password;
     private TextView confpassword;
     private TextView city;
+    private TextInputLayout emailT;
+    private TextInputLayout passwordT;
+    private TextInputLayout confpasswordT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +41,10 @@ public class RegisterViewController extends AppCompatActivity implements View.On
         email = (TextView) findViewById(R.id.emial_edit_text);
         password = (TextView) findViewById(R.id.password_edit_text);
         confpassword = (TextView) findViewById(R.id.conf_password_edit_text);
-        city = (TextView) findViewById(R.id.city_edit_text);
-        city.addTextChangedListener(this);
+        emailT = (TextInputLayout) findViewById(R.id.email_input_layout);
+        passwordT = (TextInputLayout) findViewById(R.id.password_input_layout);
+        confpasswordT = (TextInputLayout) findViewById(R.id.conf_password_input_layout);
+
 
         LinearLayout button = (LinearLayout) findViewById(R.id.button);
         button.setOnClickListener(this);
@@ -47,15 +53,35 @@ public class RegisterViewController extends AppCompatActivity implements View.On
     @Override
     public void onClick(View view) {
         HashMap<String, String> map = new HashMap<>();
-        map.put("email", email.getText().toString());
-        map.put("password", password.getText().toString());
-        map.put("city", city.getText().toString());
+        String strE = email.getText().toString();
+        String strP = password.getText().toString();
+        String strC = confpassword.getText().toString();
+        if (strE == null || strE.length() == 0) {
+            emailT.setError("Empty e-mail");
+            passwordT.setError("");
+            confpasswordT.setError("");
+            return;
+        }
+        if (strP == null || strP.length() == 0) {
+            emailT.setError("");
+            passwordT.setError("Empty password");
+            confpasswordT.setError("");
+            return;
+        }
+        if (strC == null || !strC.equals(strP)) {
+            emailT.setError("");
+            passwordT.setError("");
+            confpasswordT.setError("Passwords must be the same");
+            return;
+        }
+        map.put("email", strE);
+        map.put("password", strP);
+        map.put("city", "GENE-sky");
 
         Service.getApiService().register(map).enqueue(
                 new Callback<Match>() {
                     @Override
                     public void onResponse(Call<Match> call, Response<Match> response) {
-                        System.out.println("SUCCESS");
                         finish();
                     }
 
@@ -79,7 +105,7 @@ public class RegisterViewController extends AppCompatActivity implements View.On
                 new Callback<ArrayList<Place>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Place>> call, Response<ArrayList<Place>> response) {
-                        setAdapter(response.body());
+                        setSpinner(response.body());
                     }
 
                     @Override
@@ -95,36 +121,7 @@ public class RegisterViewController extends AppCompatActivity implements View.On
 
     }
     
-    private void setAdapter(ArrayList<Place> places) {
-        ArrayList<Place> array = noRepeat(places);
+    private void setSpinner(ArrayList<Place> places) {
 
-        for (final Place p : array) {
-            View v = getLayoutInflater().inflate(R.layout.suggestion_item, null);
-            TextView textView = (TextView) v.findViewById(R.id.text);
-            textView.setText(p.getCityId());
-            v.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            city.setText(p.getCityId());
-                        }
-                    }
-            );
-            suggestion.addView(v);
-        }
-    }
-
-    private ArrayList<Place> noRepeat(ArrayList<Place> places) {
-        int n = places.size();
-        ArrayList<Place> res = new ArrayList<>();
-        for (int i = 0; i < n; ++i) {
-            int m = res.size();
-            boolean noEsta = true;
-            for (int j = 0; j < m && noEsta; j++) {
-                noEsta = (!places.get(i).getCityId().equalsIgnoreCase(res.get(j).getCityId()));
-            }
-            if (noEsta) res.add(places.get(i));
-        }
-        return res;
     }
 }

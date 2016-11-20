@@ -16,6 +16,18 @@
         android:paddingEnd="32dp"
         >
 
+
+        <TextView
+            android:text="Register to CityMatch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:fontFamily="sans-serif"
+            android:textSize="24sp"
+            android:textColor="@color/md_black_1000"
+            android:textStyle="normal|italic"
+            android:textAlignment="center" />
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/name_input_layout"
             android:layout_width="match_parent"
@@ -45,29 +57,6 @@
                 android:hint="E-Mail"/>
 
         </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/city_input_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/city_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:inputType="textEmailSubject"
-                android:hint="City"/>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <LinearLayout
-            android:id="@+id/suggestion_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/password_input_layout"

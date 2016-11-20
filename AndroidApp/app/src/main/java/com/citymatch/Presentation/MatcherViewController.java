@@ -45,7 +45,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
         CardView likeButton = (CardView) findViewById(R.id.like);
         CardView dislikeButton = (CardView) findViewById(R.id.dislike);
         deck = (SwipeDeck) findViewById(R.id.swipe_deck);
-        ImageView settingsButton = (ImageView) findViewById(R.id.settings);
+        ImageView settingsButton = (ImageView) findViewById(R.id.logout);
         ImageView listButton = (ImageView) findViewById(R.id.matches);
 
         likeButton.setOnClickListener(this);
@@ -90,6 +90,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                     @Override
                     public void onResponse(Call<ArrayList<Image>> call, Response<ArrayList<Image>> response) {
                         ArrayList<Image> imgs = response.body();
+                        if (imgs == null) return;
                         for (Image i : imgs) {
                             adapter.push(i.getUrl());
                             ids.add(i.getId());
@@ -136,7 +137,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                             Match match = response.body();
                             if (match.getMatch()) {
                                 matchCityId = match.getCity();
-                                isMatch();
+                                isMatch(match);
                             }
                         }
 
@@ -149,7 +150,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
         }
     }
 
-    private void isMatch() {
+    private void isMatch(Match match) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.match_dialog, null);
         // TODO image views
@@ -201,7 +202,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                 deck.swipeTopCardRight(1000);
                 break;
 
-            case R.id.settings:
+            case R.id.logout:
                 Service.logout(this);
                 startActivity(new Intent(getApplicationContext(), LoginViewController.class));
                 break;

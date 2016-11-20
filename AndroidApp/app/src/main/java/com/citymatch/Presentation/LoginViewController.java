@@ -53,10 +53,12 @@ public class LoginViewController extends AppCompatActivity implements View.OnCli
             if (strEmail == null || strEmail.length() == 0) {
                 passwordTIL.setError("");
                 emailTIL.setError("Empty email");
+                return;
             }
             if (strPassword == null || strPassword.length() == 0) {
                 passwordTIL.setError("Incorrect password");
                 emailTIL.setError("");
+                return;
             }
             Map<String, String> map = new HashMap<>();
             map.put("email", email.getText().toString());
