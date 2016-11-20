@@ -162,9 +162,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(getApplicationContext(), MatchViewController.class);
-                        intent.putExtra(MatchListViewController.IntentAttribute.USER_ID.toString(), userId);
-                        intent.putExtra(MatchListViewController.IntentAttribute.CITY_ID.toString(), matchCityId);
+                        Intent intent = new Intent(getApplicationContext(), MatchListViewController.class);
                         startActivity(intent);
                     }
                 }

@@ -8,7 +8,6 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        app:srcCompat="@android:drawable/ic_menu_report_image"
         android:id="@+id/icon"
         android:layout_gravity="center_vertical|center_horizontal"
         android:scaleType="centerCrop" />
@@ -26,6 +25,7 @@
             android:textSize="26sp"
             android:layout_weight="1"
             android:paddingStart="16dp"
+            android:textColor="@color/md_black_1000"
             android:gravity="bottom" />
 
         <TextView
