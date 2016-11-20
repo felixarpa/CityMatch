@@ -40,9 +40,10 @@ public interface MyApiEntryPoint {
     @GET("match/{userID}/")
     Call<ArrayList<MatchItem>> getMatchList(@Path("userID") String userID);
 
-    @GET("likes/{userID}/{cityID}/")
-    Call<ArrayList<String>> getMatchImages(@Path("userID") String userID, @Path("cityID") String cityID);
-
     @GET("airports/{message}")
     Call<ArrayList<Place>> getPlaces(@Path("message") String message);
+
+    @GET("images/likes/{userID}/{cityID}")
+    Call<ArrayList<Image>> getMatchImages(@Path("userID") String userID, @Path("cityID") String cityID);
+
 }
