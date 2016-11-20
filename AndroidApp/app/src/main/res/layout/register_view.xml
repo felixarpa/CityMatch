@@ -26,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
+                android:inputType="textEmailSubject"
                 android:hint="Name"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -55,10 +56,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:inputType="textEmailAddress"
+                android:inputType="textEmailSubject"
                 android:hint="City"/>
 
         </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/suggestion_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/password_input_layout"

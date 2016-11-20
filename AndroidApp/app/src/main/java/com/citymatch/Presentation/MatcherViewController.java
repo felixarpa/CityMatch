@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.citymatch.ApiService.MyApiEntryPoint;
 import com.citymatch.ApiService.Service;
 import com.citymatch.Domain.Models.Image;
 import com.citymatch.Domain.Models.Match;
@@ -73,7 +72,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
         if (position % 10 == 7) {
             loadPlaces();
         }
-        //match(false, position);
+        match(false, position);
     }
 
     @Override
@@ -93,6 +92,8 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                         ArrayList<Image> imgs = response.body();
                         for (Image i : imgs) {
                             adapter.push(i.getUrl());
+                            ids.add(i.getId());
+                            System.out.println("DBG " + i.getId());
                         }
                         setDeck();
                     }
@@ -121,11 +122,13 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
     }
 
     private void match(boolean like, int position) {
-        //if (like) {
+        if (like) {
             String id = ids.get(position);
             final HashMap<String, String> map = new HashMap<>();
             map.put("user", userId);
             map.put("image", id);
+            System.out.println("DBG USER " + userId);
+            System.out.println("DBG IMAGE " + id);
             Service.getApiService().like(map).enqueue(
                     new Callback<Match>() {
                         @Override
@@ -143,7 +146,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                         }
                     }
             );
-        //}
+        }
     }
 
     private void isMatch() {
@@ -199,6 +202,8 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.settings:
+                Service.logout(this);
+                startActivity(new Intent(getApplicationContext(), LoginViewController.class));
                 break;
 
             case R.id.matches:

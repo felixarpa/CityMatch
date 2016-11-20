@@ -16,6 +16,7 @@ public class SplashController extends AppCompatActivity {
 
         if (Service.isLogged(this)) {
             startActivity(new Intent(getApplicationContext(), MatcherViewController.class));
+//            startActivity(new Intent(getApplicationContext(), LoginViewController.class));
             finish();
         } else {
             startActivity(new Intent(getApplicationContext(), LoginViewController.class));

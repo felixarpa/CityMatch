@@ -4,6 +4,7 @@ package com.citymatch.ApiService;
 import com.citymatch.Domain.Models.Image;
 import com.citymatch.Domain.Models.Match;
 import com.citymatch.Domain.Models.MatchItem;
+import com.citymatch.Domain.Models.Place;
 import com.citymatch.Domain.Models.User;
 
 import java.util.ArrayList;
@@ -29,12 +30,19 @@ public interface MyApiEntryPoint {
     @POST("images/like/")
     Call<Match> like(@FieldMap Map<String, String> names);
 
-    @GET("city/{cityID}")
+    @FormUrlEncoded
+    @POST("users/")
+    Call<Match> register(@FieldMap Map<String, String> names);
+
+    @GET("city/{cityID}/")
     Call<MatchItem> getCityDescription(@Path("cityID") String cityID);
 
-    @GET("match/{userID}")
+    @GET("match/{userID}/")
     Call<ArrayList<MatchItem>> getMatchList(@Path("userID") String userID);
 
-    @GET("likes/{userID}/{cityID}")
+    @GET("likes/{userID}/{cityID}/")
     Call<ArrayList<String>> getMatchImages(@Path("userID") String userID, @Path("cityID") String cityID);
+
+    @GET("airports/{message}")
+    Call<ArrayList<Place>> getPlaces(@Path("message") String message);
 }
