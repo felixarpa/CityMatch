@@ -9,11 +9,13 @@
 
     <ImageView
         android:id="@+id/logo_image"
+        android:src="@mipmap/logo_city_match3"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_alignParentTop="true"
         android:layout_margin="32dp"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerInside"
+        android:tint="@color/colorAccent"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
