@@ -2,6 +2,7 @@ package com.citymatch.ApiService;
 
 
 import com.citymatch.Domain.Models.Image;
+import com.citymatch.Domain.Models.Location;
 import com.citymatch.Domain.Models.Match;
 import com.citymatch.Domain.Models.MatchItem;
 import com.citymatch.Domain.Models.Place;
@@ -48,4 +49,6 @@ public interface MyApiEntryPoint {
     @GET("images/likes/{userID}/{cityID}")
     Call<ArrayList<Image>> getMatchImages(@Path("userID") String userID, @Path("cityID") String cityID);
 
+    @GET("locate/{cityName}")
+    Call<Location> getLocation(@Path("cityName") String cityName);
 }
