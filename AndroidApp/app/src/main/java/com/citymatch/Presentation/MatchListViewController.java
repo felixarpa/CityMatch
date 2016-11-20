@@ -38,7 +38,7 @@ public class MatchListViewController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.match_list_view);
 
-        userID = "5830cbe1100d1c0011345ab4";
+        userID = Service.getUserId(getApplicationContext());
 
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
         inflater = getLayoutInflater();
@@ -77,8 +77,10 @@ public class MatchListViewController extends AppCompatActivity {
         @Override
         public void onResponse(Call<ArrayList<MatchItem>> call, Response<ArrayList<MatchItem>> response) {
             matchList = response.body();
-            MyArrayAdapter adapter = new MyArrayAdapter(getApplicationContext(), matchList);
-            listView.setAdapter(adapter);
+            if(matchList != null) {
+                MyArrayAdapter adapter = new MyArrayAdapter(getApplicationContext(), matchList);
+                listView.setAdapter(adapter);
+            }
         }
 
         @Override

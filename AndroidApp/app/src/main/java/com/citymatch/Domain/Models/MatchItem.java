@@ -11,35 +11,18 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Generated;
 
 public class MatchItem {
 
-    private String id;
     private String name;
     private String country;
     private String coverImage;
     private String ssid;
     private String description;
     private Integer v;
+    private String id;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    /**
-     *
-     * @return
-     * The id
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     *
-     * @param id
-     * The _id
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
 
     /**
      *
@@ -147,6 +130,24 @@ public class MatchItem {
      */
     public void setV(Integer v) {
         this.v = v;
+    }
+
+    /**
+     *
+     * @return
+     * The id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     *
+     * @param id
+     * The id
+     */
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Map<String, Object> getAdditionalProperties() {

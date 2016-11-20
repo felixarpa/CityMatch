@@ -35,6 +35,9 @@
 
         <activity android:name=".Presentation.MatchListViewController"
             android:screenOrientation="portrait"/>
+
+        <activity android:name=".Presentation.MatchViewController"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

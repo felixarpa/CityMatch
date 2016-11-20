@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.citymatch.ApiService.Service;
+import com.citymatch.Domain.Models.Image;
 import com.citymatch.Domain.Models.MatchItem;
 import com.citymatch.R;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,7 +43,7 @@ public class MatchViewController extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.match_list_view);
+        setContentView(R.layout.match_detail_view);
 
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
         inflater = getLayoutInflater();
@@ -53,13 +54,15 @@ public class MatchViewController extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;
-                //if(item.)
+                //if(item != nu)
             }
         });
 
         Intent intent = getIntent();
         userID = intent.getStringExtra(MatchListViewController.IntentAttribute.USER_ID.toString());
         cityID = intent.getStringExtra(MatchListViewController.IntentAttribute.CITY_ID.toString());
+
+        photos = (ListView) findViewById(R.id.photos);
 
         Service.getApiService().getCityDescription(cityID).enqueue(new CityDescriptionCallback());
         Service.getApiService().getMatchImages(userID, cityID).enqueue(new MatchImagesCallback());
@@ -76,6 +79,7 @@ public class MatchViewController extends AppCompatActivity {
             country.setText(item.getCountry());
             TextView description = (TextView) findViewById(R.id.description);
             description.setText(item.getDescription());
+            ImageLoader.getInstance().displayImage(item.getCoverImage(), (ImageView) findViewById(R.id.icon));
         }
 
         @Override
@@ -84,34 +88,35 @@ public class MatchViewController extends AppCompatActivity {
         }
     }
 
-    private class MatchImagesCallback implements Callback<ArrayList<String>> {
+    private class MatchImagesCallback implements Callback<ArrayList<Image>> {
 
         @Override
-        public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
-            ArrayList<String> photosURL = response.body();
-            MyArrayAdapter adapter = new MyArrayAdapter(getApplicationContext(), photosURL);
+        public void onResponse(Call<ArrayList<Image>> call, Response<ArrayList<Image>> response) {
+            ArrayList<Image> images = response.body();
+            MyArrayAdapter adapter = new MyArrayAdapter(getApplicationContext(), images);
             photos.setAdapter(adapter);
         }
 
         @Override
-        public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+        public void onFailure(Call<ArrayList<Image>> call, Throwable t) {
+            t.printStackTrace();
             Toast.makeText(getApplicationContext(), "Database connection error = " + t.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class MyArrayAdapter extends ArrayAdapter<String> {
-        private final ArrayList<String> photosURL;
+    private class MyArrayAdapter extends ArrayAdapter<Image> {
+        private final ArrayList<Image> images;
 
-        public MyArrayAdapter(Context context, ArrayList<String> photosURL) {
-            super(context, 0, photosURL);
-            this.photosURL = photosURL;
+        public MyArrayAdapter(Context context, ArrayList<Image> images) {
+            super(context, 0, images);
+            this.images = images;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView photo = new ImageView(getApplicationContext());
             //photo.setLayoutParams(new ViewGroup.LayoutParams(getApplicationContext(), new ));
-            ImageLoader.getInstance().displayImage(photosURL.get(position), photo);
+            ImageLoader.getInstance().displayImage(images.get(position).getUrl(), photo);
             return photo;
         }
     }
