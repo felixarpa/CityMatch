@@ -2,6 +2,7 @@ package com.citymatch.Presentation;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -9,15 +10,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.citymatch.ApiService.MyApiEntrypoint;
 import com.citymatch.ApiService.Service;
 import com.citymatch.Domain.Models.Image;
+import com.citymatch.Domain.Models.Match;
 import com.citymatch.R;
 import com.daprlabs.cardstack.SwipeDeck;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,7 +31,8 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
 
     private ArrayList<String> ids = new ArrayList<>();
 
-    private int page = 0;
+    private String userId;
+    private String matchCityId;
     private DeckAdapter adapter;
 
     @Override
@@ -52,9 +55,37 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
 
         adapter = new DeckAdapter(this);
 
-        MyApiEntrypoint apiService = Service.getApiService();
+        userId = Service.getUserId(this);
 
-        Service.getApiService().getImages().enqueue(
+        loadPlaces();
+
+    }
+
+    private void setDeck() {
+        deck.setAdapter(adapter);
+        deck.setEventCallback(this);
+    }
+
+    @Override
+    public void cardSwipedLeft(int position) {
+        // DISLIKE
+        if (position % 10 == 7) {
+            loadPlaces();
+        }
+        //match(false, position);
+    }
+
+    @Override
+    public void cardSwipedRight(int position) {
+        // LIKE
+        if (position % 10 == 7) {
+            loadPlaces();
+        }
+        match(true, position);
+    }
+
+    private void loadPlaces() {
+        Service.getApiService().getImages(userId).enqueue(
                 new Callback<ArrayList<Image>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Image>> call, Response<ArrayList<Image>> response) {
@@ -71,34 +102,6 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                     }
                 }
         );
-
-    }
-
-    private void setDeck() {
-        deck.setAdapter(adapter);
-        deck.setEventCallback(this);
-    }
-
-    @Override
-    public void cardSwipedLeft(int position) {
-        // DISLIKE
-        if (position % 10 == 7) {
-            loadMorePlaces();
-        }
-        match(false, position);
-    }
-
-    @Override
-    public void cardSwipedRight(int position) {
-        // LIKE
-        if (position % 10 == 7) {
-            loadMorePlaces();
-        }
-        match(true, position);
-    }
-
-    private void loadMorePlaces() {
-        ++page;
     }
 
     @Override
@@ -117,8 +120,29 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
     }
 
     private void match(boolean like, int position) {
-        String id = ids.get(position);
+        //if (like) {
+            String id = ids.get(position);
+            final HashMap<String, String> map = new HashMap<>();
+            map.put("user", userId);
+            map.put("image", id);
+            Service.getApiService().like(map).enqueue(
+                    new Callback<Match>() {
+                        @Override
+                        public void onResponse(Call<Match> call, Response<Match> response) {
+                            Match match = response.body();
+                            if (match.getMatch()) {
+                                matchCityId = match.getCity();
+                                isMatch();
+                            }
+                        }
 
+                        @Override
+                        public void onFailure(Call<Match> call, Throwable t) {
+
+                        }
+                    }
+            );
+        //}
     }
 
     private void isMatch() {
@@ -131,7 +155,10 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        Intent intent = new Intent(getApplicationContext(), MatchViewController.class);
+                        intent.putExtra(MatchListViewController.IntentAttribute.USER_ID.toString(), userId);
+                        intent.putExtra(MatchListViewController.IntentAttribute.CITY_ID.toString(), matchCityId);
+                        startActivity(intent);
                     }
                 }
         );

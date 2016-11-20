@@ -10,18 +10,27 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Presentation.SplashController">
+        <activity
+            android:name=".Presentation.SplashController"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDXC8_Mk-Qd0JHm7U7zcKMUMdv4S5I3UXY"/>
-        <activity android:name=".Presentation.LoginViewController" />
-        <activity android:name=".Presentation.MatcherViewController" />
+            android:value="AIzaSyDXC8_Mk-Qd0JHm7U7zcKMUMdv4S5I3UXY" />
+
+        <activity
+            android:name=".Presentation.LoginViewController"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Presentation.MatcherViewController"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Presentation.RegisterViewController"></activity>
     </application>
 
 </manifest>

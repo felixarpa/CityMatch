@@ -1,8 +1,6 @@
 package com.citymatch.Presentation;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +23,7 @@ public class LoginViewController extends AppCompatActivity implements View.OnCli
 
     private EditText email;
     private EditText password;
+    private TextInputLayout emailTIL;
     private TextInputLayout passwordTIL;
 
     @Override
@@ -34,6 +33,7 @@ public class LoginViewController extends AppCompatActivity implements View.OnCli
 
         email = (EditText) findViewById(R.id.emial_edit_text);
         password = (EditText) findViewById(R.id.password_edit_text);
+        emailTIL = (TextInputLayout) findViewById(R.id.email_input_layout);
         passwordTIL = (TextInputLayout) findViewById(R.id.password_input_layout);
 
         LinearLayout login = (LinearLayout) findViewById(R.id.button);
@@ -45,26 +45,39 @@ public class LoginViewController extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View view) {
-        Map<String, String> map = new HashMap<>();
-        map.put("email", "pau@outlook.com");
-        Service.getApiService().login(map).enqueue(
-                new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                        SharedPreferences.Editor editor = getSharedPreferences("sp-citymatch", Context.MODE_PRIVATE).edit();
-                        editor.putString("user_id", response.body().getId());
-                        editor.putBoolean("logged", true);
-                        editor.apply();
-                        startActivity(new Intent(getApplicationContext(), MatcherViewController.class));
-                        finish();
+        if (view.getId() == R.id.register_layout) {
+            startActivity(new Intent(getApplicationContext(), RegisterViewController.class));
+        } else {
+            String strEmail = email.getText().toString();
+            String strPassword = password.getText().toString();
+            if (strEmail == null || strEmail.length() == 0) {
+                passwordTIL.setError("");
+                emailTIL.setError("Empty email");
+            }
+            if (strPassword == null || strPassword.length() == 0) {
+                passwordTIL.setError("Incorrect password");
+                emailTIL.setError("");
+            }
+            Map<String, String> map = new HashMap<>();
+            map.put("email", email.getText().toString());
+            map.put("password", password.getText().toString());
+            Service.getApiService().login(map).enqueue(
+                    new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            Service.login(getApplicationContext(), response.body().getId());
+                            startActivity(new Intent(getApplicationContext(), MatcherViewController.class));
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            passwordTIL.setError("Incorrect e-mail or password");
+                            emailTIL.setError("");
+                        }
                     }
+            );
 
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {
-
-                    }
-                }
-        );
-
+        }
     }
 }
