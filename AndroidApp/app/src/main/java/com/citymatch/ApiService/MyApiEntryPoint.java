@@ -20,7 +20,7 @@ import retrofit2.http.Path;
 
 public interface MyApiEntryPoint {
 
-    @Headers({"Cache-Control: no-store"})
+    @Headers("Cache-Control: no-store")
     @GET("images/{userId}/")
     Call<ArrayList<Image>> getImages(@Path("userId") String userId);
 
