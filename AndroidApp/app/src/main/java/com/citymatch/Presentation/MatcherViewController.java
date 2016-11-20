@@ -35,6 +35,8 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
     private String matchCityId;
     private DeckAdapter adapter;
 
+    private int count = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +71,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
     @Override
     public void cardSwipedLeft(int position) {
         // DISLIKE
-        if (position % 5 == 3) {
+        if (position % 10 == 9) {
             loadPlaces();
         }
         match(false, position);
@@ -78,7 +80,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
     @Override
     public void cardSwipedRight(int position) {
         // LIKE
-        if (position % 5 == 3) {
+        if (position % 10 == 9) {
             loadPlaces();
         }
         match(true, position);
@@ -134,11 +136,13 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                     new Callback<Match>() {
                         @Override
                         public void onResponse(Call<Match> call, Response<Match> response) {
-                            Match match = response.body();
-                            if (match.getMatch()) {
-                                matchCityId = match.getCity();
-                                isMatch(match, position);
-                            }
+                            try {
+                                Match match = response.body();
+                                if (match.getMatch()) {
+                                    matchCityId = match.getCity();
+                                    isMatch(match, position);
+                                }
+                            } catch (Exception ignored) {}
                         }
 
                         @Override

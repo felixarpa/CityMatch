@@ -78,7 +78,11 @@ public class MatchListViewController extends AppCompatActivity {
         public void onResponse(Call<ArrayList<MatchItem>> call, Response<ArrayList<MatchItem>> response) {
             matchList = response.body();
             if(matchList != null) {
-                MyArrayAdapter adapter = new MyArrayAdapter(getApplicationContext(), matchList);
+                ArrayList<MatchItem> list = new ArrayList<>();
+                for (MatchItem i : matchList) {
+                    if (i != null) list.add(i);
+                }
+                MyArrayAdapter adapter = new MyArrayAdapter(getApplicationContext(), list);
                 listView.setAdapter(adapter);
             }
         }
