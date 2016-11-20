@@ -78,4 +78,8 @@ public class DeckAdapter extends BaseAdapter {
         );
         return v;
     }
+
+    public String getUrl(int position) {
+        return urls.get(position);
+    }
 }

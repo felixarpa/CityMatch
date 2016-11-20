@@ -69,7 +69,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
     @Override
     public void cardSwipedLeft(int position) {
         // DISLIKE
-        if (position % 10 == 7) {
+        if (position % 5 == 3) {
             loadPlaces();
         }
         match(false, position);
@@ -78,7 +78,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
     @Override
     public void cardSwipedRight(int position) {
         // LIKE
-        if (position % 10 == 7) {
+        if (position % 5 == 3) {
             loadPlaces();
         }
         match(true, position);
@@ -122,7 +122,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
 
     }
 
-    private void match(boolean like, int position) {
+    private void match(boolean like, final int position) {
         if (like) {
             String id = ids.get(position);
             final HashMap<String, String> map = new HashMap<>();
@@ -137,7 +137,7 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
                             Match match = response.body();
                             if (match.getMatch()) {
                                 matchCityId = match.getCity();
-                                isMatch(match);
+                                isMatch(match, position);
                             }
                         }
 
@@ -150,9 +150,11 @@ public class MatcherViewController extends AppCompatActivity implements View.OnC
         }
     }
 
-    private void isMatch(Match match) {
+    private void isMatch(Match match, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.match_dialog, null);
+        ImageView city = (ImageView) view.findViewById(R.id.city_image);
+        ImageLoader.getInstance().displayImage(adapter.getUrl(position), city);
         // TODO image views
         builder.setView(view);
         builder.setPositiveButton(

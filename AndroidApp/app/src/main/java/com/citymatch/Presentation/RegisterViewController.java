@@ -76,7 +76,7 @@ public class RegisterViewController extends AppCompatActivity implements View.On
         }
         map.put("email", strE);
         map.put("password", strP);
-        map.put("city", "GENE-sky");
+        map.put("city", "LOND-sky");
 
         Service.getApiService().register(map).enqueue(
                 new Callback<Match>() {
